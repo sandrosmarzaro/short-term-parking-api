@@ -4,6 +4,7 @@ import one.digitalinnovation.shorttermparking.models.ParkingSpotModel;
 import one.digitalinnovation.shorttermparking.models.dto.ParkingSpotDTO;
 import one.digitalinnovation.shorttermparking.models.mappers.ParkingSpotMapper;
 import one.digitalinnovation.shorttermparking.services.ParkingSpotService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,8 +28,9 @@ public class ParkingSpotController {
 
 
     @GetMapping
-    public List<ParkingSpotDTO> findAll() {
+    public ResponseEntity<List<ParkingSpotDTO>> findAll() {
         List<ParkingSpotModel> parkingList = parkingSpotService.findAll();
-        return parkingSpotMapper.toDTOList(parkingList);
+        List<ParkingSpotDTO> parkingDTOSList = parkingSpotMapper.toDTOList(parkingList);
+        return ResponseEntity.ok(parkingDTOSList);
     }
 }

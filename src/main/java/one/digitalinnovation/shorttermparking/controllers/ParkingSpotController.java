@@ -1,5 +1,7 @@
 package one.digitalinnovation.shorttermparking.controllers;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import one.digitalinnovation.shorttermparking.models.ParkingSpotModel;
 import one.digitalinnovation.shorttermparking.dto.ParkingSpotRequest;
 import one.digitalinnovation.shorttermparking.dto.ParkingSpotResponse;
@@ -13,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/parking")
+@Api(tags = "Parking Spot")
 public class ParkingSpotController {
 
     private final ParkingSpotService parkingSpotService;
@@ -27,6 +30,7 @@ public class ParkingSpotController {
     }
 
     @GetMapping
+    @ApiOperation(value = "List all parking spots")
     public ResponseEntity<List<ParkingSpotResponse>> findAll() {
         List<ParkingSpotModel> parkingList = parkingSpotService.findAll();
         List<ParkingSpotResponse> parkingDTOSList = parkingSpotMapper.toDTOList(parkingList);
@@ -34,6 +38,7 @@ public class ParkingSpotController {
     }
 
     @GetMapping("/{id}")
+    @ApiOperation(value = "Find parking spot by id")
     public ResponseEntity<ParkingSpotResponse> findById(@PathVariable String id) {
         ParkingSpotModel parkingSpotModel = parkingSpotService.findById(id);
         if (parkingSpotModel == null) {
@@ -44,6 +49,7 @@ public class ParkingSpotController {
     }
 
     @PostMapping
+    @ApiOperation(value = "Create a new parking spot")
     public ResponseEntity<ParkingSpotResponse> create(@RequestBody ParkingSpotRequest parkingSpotRequest) {
         ParkingSpotModel parkingSpotModel = parkingSpotMapper.toModel(parkingSpotRequest);
         ParkingSpotModel parkingSpotModelCreated = parkingSpotService.create(parkingSpotModel);

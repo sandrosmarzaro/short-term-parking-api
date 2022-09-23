@@ -41,4 +41,8 @@ public class ParkingSpotService {
     public List<ParkingSpotModel> findAll() {
         return List.copyOf(parkingSpots.values());
     }
+
+    public ParkingSpotModel findById(String id) {
+        return parkingSpots.get(id);
+    }
 }

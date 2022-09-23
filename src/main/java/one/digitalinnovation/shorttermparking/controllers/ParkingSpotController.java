@@ -1,9 +1,11 @@
 package one.digitalinnovation.shorttermparking.controllers;
 
 import one.digitalinnovation.shorttermparking.models.ParkingSpotModel;
-import one.digitalinnovation.shorttermparking.models.dto.ParkingSpotDTO;
-import one.digitalinnovation.shorttermparking.models.mappers.ParkingSpotMapper;
+import one.digitalinnovation.shorttermparking.dto.ParkingSpotRequest;
+import one.digitalinnovation.shorttermparking.dto.ParkingSpotResponse;
+import one.digitalinnovation.shorttermparking.mappers.ParkingSpotMapper;
 import one.digitalinnovation.shorttermparking.services.ParkingSpotService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,19 +27,27 @@ public class ParkingSpotController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ParkingSpotDTO>> findAll() {
+    public ResponseEntity<List<ParkingSpotResponse>> findAll() {
         List<ParkingSpotModel> parkingList = parkingSpotService.findAll();
-        List<ParkingSpotDTO> parkingDTOSList = parkingSpotMapper.toDTOList(parkingList);
+        List<ParkingSpotResponse> parkingDTOSList = parkingSpotMapper.toDTOList(parkingList);
         return ResponseEntity.ok(parkingDTOSList);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ParkingSpotDTO> findById(@PathVariable String id) {
+    public ResponseEntity<ParkingSpotResponse> findById(@PathVariable String id) {
         ParkingSpotModel parkingSpotModel = parkingSpotService.findById(id);
         if (parkingSpotModel == null) {
             return ResponseEntity.notFound().build();
         }
-        ParkingSpotDTO parkingSpotDTO = parkingSpotMapper.toDTO(parkingSpotModel);
-        return ResponseEntity.ok(parkingSpotDTO);
+        ParkingSpotResponse parkingSpotDTO = parkingSpotMapper.toDTO(parkingSpotModel);
+        return ResponseEntity.status(HttpStatus.OK).body(parkingSpotDTO);
+    }
+
+    @PostMapping
+    public ResponseEntity<ParkingSpotResponse> create(@RequestBody ParkingSpotRequest parkingSpotRequest) {
+        ParkingSpotModel parkingSpotModel = parkingSpotMapper.toModel(parkingSpotRequest);
+        ParkingSpotModel parkingSpotModelCreated = parkingSpotService.create(parkingSpotModel);
+        ParkingSpotResponse parkingSpotDTOCreated = parkingSpotMapper.toDTO(parkingSpotModelCreated);
+        return ResponseEntity.status(HttpStatus.CREATED).body(parkingSpotDTOCreated);
     }
 }

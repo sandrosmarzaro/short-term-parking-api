@@ -3,13 +3,15 @@ package one.digitalinnovation.shorttermparking.services;
 import one.digitalinnovation.shorttermparking.models.ParkingSpotModel;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class ParkingSpotService {
-    private static Map<String, ParkingSpotModel> parkingSpots;
+    private static Map<String, ParkingSpotModel> parkingSpots = new HashMap<>();
 
     static {
         ParkingSpotModel parking1 = new ParkingSpotModel(
@@ -29,9 +31,8 @@ public class ParkingSpotService {
                 "Civic",
                 "White"
         );
-
-
-        parkingSpots = Map.of(parking1.getId(), parking1, parking2.getId(), parking2);
+        parkingSpots.put(parking1.getId(), parking1);
+        parkingSpots.put(parking2.getId(), parking2);
     }
 
     private static String getUUID() {
@@ -44,5 +45,12 @@ public class ParkingSpotService {
 
     public ParkingSpotModel findById(String id) {
         return parkingSpots.get(id);
+    }
+
+    public ParkingSpotModel create(ParkingSpotModel parkingSpotModel) {
+        parkingSpotModel.setId(getUUID());
+        parkingSpotModel.setEntryDate(OffsetDateTime.now());
+        parkingSpots.put(parkingSpotModel.getId(), parkingSpotModel);
+        return parkingSpotModel;
     }
 }

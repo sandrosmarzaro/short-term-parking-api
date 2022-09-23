@@ -1,6 +1,6 @@
 package one.digitalinnovation.shorttermparking.models;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 public class ParkingSpotModel {
 
@@ -10,8 +10,8 @@ public class ParkingSpotModel {
     private String brand;
     private String model;
     private String color;
-    private LocalDateTime entryDate;
-    private LocalDateTime exitDate;
+    private OffsetDateTime entryDate;
+    private OffsetDateTime exitDate;
     private Double bill;
 
     public ParkingSpotModel() {
@@ -74,19 +74,19 @@ public class ParkingSpotModel {
         this.color = color;
     }
 
-    public LocalDateTime getEntryDate() {
+    public OffsetDateTime getEntryDate() {
         return entryDate;
     }
 
-    public void setEntryDate(LocalDateTime entryDate) {
+    public void setEntryDate(OffsetDateTime entryDate) {
         this.entryDate = entryDate;
     }
 
-    public LocalDateTime getExitDate() {
+    public OffsetDateTime getExitDate() {
         return exitDate;
     }
 
-    public void setExitDate(LocalDateTime exitDate) {
+    public void setExitDate(OffsetDateTime exitDate) {
         this.exitDate = exitDate;
     }
 

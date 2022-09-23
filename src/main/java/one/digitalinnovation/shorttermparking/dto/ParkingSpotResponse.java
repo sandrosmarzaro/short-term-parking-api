@@ -1,12 +1,12 @@
-package one.digitalinnovation.shorttermparking.models.dto;
+package one.digitalinnovation.shorttermparking.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ParkingSpotDTO {
+public class ParkingSpotResponse {
 
     private String id;
     private String license;
@@ -14,8 +14,8 @@ public class ParkingSpotDTO {
     private String brand;
     private String model;
     private String color;
-    private LocalDateTime entryDate;
-    private LocalDateTime exitDate;
+    private OffsetDateTime entryDate;
+    private OffsetDateTime exitDate;
     private Double bill;
 
     public String getId() {
@@ -66,19 +66,19 @@ public class ParkingSpotDTO {
         this.color = color;
     }
 
-    public LocalDateTime getEntryDate() {
+    public OffsetDateTime getEntryDate() {
         return entryDate;
     }
 
-    public void setEntryDate(LocalDateTime entryDate) {
+    public void setEntryDate(OffsetDateTime entryDate) {
         this.entryDate = entryDate;
     }
 
-    public LocalDateTime getExitDate() {
+    public OffsetDateTime getExitDate() {
         return exitDate;
     }
 
-    public void setExitDate(LocalDateTime exitDate) {
+    public void setExitDate(OffsetDateTime exitDate) {
         this.exitDate = exitDate;
     }
 

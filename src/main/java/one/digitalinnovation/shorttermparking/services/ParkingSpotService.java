@@ -1,5 +1,6 @@
 package one.digitalinnovation.shorttermparking.services;
 
+import one.digitalinnovation.shorttermparking.exceptions.ParkingSpotNotFoundException;
 import one.digitalinnovation.shorttermparking.models.ParkingSpotModel;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +45,11 @@ public class ParkingSpotService {
     }
 
     public ParkingSpotModel findById(String id) {
-        return parkingSpots.get(id);
+        ParkingSpotModel parkingSpotModel = parkingSpots.get(id);
+        if (parkingSpotModel == null) {
+            throw new ParkingSpotNotFoundException("Parking Spot not found");
+        }
+        return parkingSpotModel;
     }
 
     public ParkingSpotModel create(ParkingSpotModel parkingSpotModel) {

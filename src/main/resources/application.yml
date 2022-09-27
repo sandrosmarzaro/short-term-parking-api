@@ -1,0 +1,10 @@
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+server:
+  error:
+    include-exception: false
+    include-message: always
+    include-stacktrace: never
+

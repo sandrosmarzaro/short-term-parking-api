@@ -41,9 +41,6 @@ public class ParkingSpotController {
     @ApiOperation(value = "Find parking spot by id")
     public ResponseEntity<ParkingSpotResponse> findById(@PathVariable String id) {
         ParkingSpotModel parkingSpotModel = parkingSpotService.findById(id);
-        if (parkingSpotModel == null) {
-            return ResponseEntity.notFound().build();
-        }
         ParkingSpotResponse parkingSpotDTO = parkingSpotMapper.toDTO(parkingSpotModel);
         return ResponseEntity.status(HttpStatus.OK).body(parkingSpotDTO);
     }

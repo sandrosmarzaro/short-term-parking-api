@@ -53,4 +53,21 @@ public class ParkingSpotController {
         ParkingSpotResponse parkingSpotDTOCreated = parkingSpotMapper.toDTO(parkingSpotModelCreated);
         return ResponseEntity.status(HttpStatus.CREATED).body(parkingSpotDTOCreated);
     }
+
+    @PutMapping("/{id}")
+    @ApiOperation(value = "Update a parking spot")
+    public ResponseEntity<ParkingSpotResponse> update(@PathVariable String id,
+                                                      @RequestBody ParkingSpotRequest parkingSpotRequest) {
+        ParkingSpotModel parkingSpotModel = parkingSpotMapper.toModel(parkingSpotRequest);
+        ParkingSpotModel parkingSpotModelUpdated = parkingSpotService.update(id, parkingSpotModel);
+        ParkingSpotResponse parkingSpotDTOUpdated = parkingSpotMapper.toDTO(parkingSpotModelUpdated);
+        return ResponseEntity.status(HttpStatus.OK).body(parkingSpotDTOUpdated);
+    }
+
+    @DeleteMapping("/{id}")
+    @ApiOperation(value = "Delete a parking spot by id")
+    public ResponseEntity<Void> delete(@PathVariable String id) {
+        parkingSpotService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

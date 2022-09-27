@@ -37,7 +37,7 @@ public class ParkingSpotService {
     }
 
     private static String getUUID() {
-        return UUID.randomUUID().toString();
+        return UUID.randomUUID().toString().replace("-", "");
     }
 
     public List<ParkingSpotModel> findAll() {
@@ -58,4 +58,25 @@ public class ParkingSpotService {
         parkingSpots.put(parkingSpotModel.getId(), parkingSpotModel);
         return parkingSpotModel;
     }
+
+    public ParkingSpotModel update(String id, ParkingSpotModel parkingSpotModel) {
+        ParkingSpotModel parkingSpotModelToUpdate = parkingSpots.get(id);
+        parkingSpotModelToUpdate.setLicense(parkingSpotModel.getLicense());
+        parkingSpotModelToUpdate.setState(parkingSpotModel.getState());
+        parkingSpotModelToUpdate.setBrand(parkingSpotModel.getBrand());
+        parkingSpotModelToUpdate.setModel(parkingSpotModel.getModel());
+        parkingSpotModelToUpdate.setColor(parkingSpotModel.getColor());
+        parkingSpots.replace(id, parkingSpotModelToUpdate);
+        System.out.println(parkingSpotModelToUpdate);
+        return parkingSpotModelToUpdate;
+    }
+
+    public void delete(String id) {
+        ParkingSpotModel parkingSpotModel = parkingSpots.get(id);
+        if (parkingSpotModel == null) {
+            throw new ParkingSpotNotFoundException("Parking Spot not found");
+        }
+        parkingSpots.remove(id);
+    }
+
 }

@@ -1,6 +1,5 @@
 package one.digitalinnovation.shorttermparking.dto;
 
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.OffsetDateTime;

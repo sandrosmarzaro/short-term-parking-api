@@ -70,4 +70,12 @@ public class ParkingSpotController {
         parkingSpotService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{id}")
+    @ApiOperation(value = "Update a parking spot when it is exited")
+    public ResponseEntity<ParkingSpotResponse> updateWhenExited(@PathVariable String id) {
+        ParkingSpotModel parkingSpotModelUpdated = parkingSpotService.updateWhenExited(id);
+        ParkingSpotResponse parkingSpotDTOUpdated = parkingSpotMapper.toDTO(parkingSpotModelUpdated);
+        return ResponseEntity.status(HttpStatus.OK).body(parkingSpotDTOUpdated);
+    }
 }

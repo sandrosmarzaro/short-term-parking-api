@@ -2,38 +2,20 @@ package one.digitalinnovation.shorttermparking.services;
 
 import one.digitalinnovation.shorttermparking.exceptions.ParkingSpotNotFoundException;
 import one.digitalinnovation.shorttermparking.models.ParkingSpotModel;
+import one.digitalinnovation.shorttermparking.repositories.ParkingSpotRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class ParkingSpotService {
-    private static Map<String, ParkingSpotModel> parkingSpots = new HashMap<>();
 
-    static {
-        ParkingSpotModel parking1 = new ParkingSpotModel(
-                getUUID(),
-                "ABC-1234",
-                "SP",
-                "Toyota",
-                "Corolla",
-                "Black"
-        );
+    private final ParkingSpotRepository parkingSpotRepository;
 
-        ParkingSpotModel parking2 = new ParkingSpotModel(
-                getUUID(),
-                "DEF-5678",
-                "RJ",
-                "Honda",
-                "Civic",
-                "White"
-        );
-        parkingSpots.put(parking1.getId(), parking1);
-        parkingSpots.put(parking2.getId(), parking2);
+    public ParkingSpotService(ParkingSpotRepository parkingSpotRepository) {
+        this.parkingSpotRepository = parkingSpotRepository;
     }
 
     private static String getUUID() {
@@ -41,46 +23,35 @@ public class ParkingSpotService {
     }
 
     public List<ParkingSpotModel> findAll() {
-        return List.copyOf(parkingSpots.values());
+        return parkingSpotRepository.findAll();
     }
 
     public ParkingSpotModel findById(String id) {
-        ParkingSpotModel parkingSpotModel = parkingSpots.get(id);
-        if (parkingSpotModel == null) {
-            throw new ParkingSpotNotFoundException("Parking Spot not found");
-        }
-        return parkingSpotModel;
+        return parkingSpotRepository.findById(id)
+                .orElseThrow(() -> new ParkingSpotNotFoundException(id));
     }
 
     public ParkingSpotModel create(ParkingSpotModel parkingSpotModel) {
-        parkingSpotModel.setId(getUUID());
+        String uuid = getUUID();
+        parkingSpotModel.setId(uuid);
         parkingSpotModel.setEntryDate(OffsetDateTime.now());
-        parkingSpots.put(parkingSpotModel.getId(), parkingSpotModel);
-        return parkingSpotModel;
+        return parkingSpotRepository.save(parkingSpotModel);
     }
 
     public ParkingSpotModel update(String id, ParkingSpotModel parkingSpotModel) {
-        ParkingSpotModel parkingSpotModelToUpdate = this.findById(id);
+        ParkingSpotModel parkingSpotModelToUpdate = findById(id);
         parkingSpotModelToUpdate.setLicense(parkingSpotModel.getLicense());
         parkingSpotModelToUpdate.setState(parkingSpotModel.getState());
-        parkingSpotModelToUpdate.setBrand(parkingSpotModel.getBrand());
-        parkingSpotModelToUpdate.setModel(parkingSpotModel.getModel());
-        parkingSpotModelToUpdate.setColor(parkingSpotModel.getColor());
-        parkingSpots.replace(id, parkingSpotModelToUpdate);
-        System.out.println(parkingSpotModelToUpdate);
-        return parkingSpotModelToUpdate;
+        return parkingSpotRepository.save(parkingSpotModelToUpdate);
     }
 
     public void delete(String id) {
-        ParkingSpotModel parkingSpotModel = this.findById(id);
-        if (parkingSpotModel == null) {
-            throw new ParkingSpotNotFoundException("Parking Spot not found");
-        }
-        parkingSpots.remove(id);
+        ParkingSpotModel parkingSpotModelToDelete = findById(id);
+        parkingSpotRepository.delete(parkingSpotModelToDelete);
     }
 
     public ParkingSpotModel updateWhenExited(String id) {
-        ParkingSpotModel parkingSpotModelToUpdate = this.findById(id);
+        ParkingSpotModel parkingSpotModelToUpdate = findById(id);
         parkingSpotModelToUpdate.setExitDate(OffsetDateTime.now());
         final double RATE = 3.5;
         final int ENTRY_HOUR = parkingSpotModelToUpdate.getEntryDate().getHour();
@@ -91,7 +62,6 @@ public class ParkingSpotService {
         final double MINUTE_SPENT = (EXIT_MINUTE - ENTRY_MINUTE) / 60.0;
         final double TIME_SPENT = HOUR_SPENT + MINUTE_SPENT;
         parkingSpotModelToUpdate.setBill(TIME_SPENT * RATE);
-        parkingSpots.replace(id, parkingSpotModelToUpdate);
-        return parkingSpotModelToUpdate;
+        return parkingSpotRepository.save(parkingSpotModelToUpdate);
     }
 }

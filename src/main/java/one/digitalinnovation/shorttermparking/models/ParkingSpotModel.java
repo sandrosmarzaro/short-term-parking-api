@@ -1,9 +1,12 @@
 package one.digitalinnovation.shorttermparking.models;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.time.OffsetDateTime;
 
+@Entity
 public class ParkingSpotModel {
-
+    @Id
     private String id;
     private String license;
     private String state;

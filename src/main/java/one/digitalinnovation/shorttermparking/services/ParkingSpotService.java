@@ -53,15 +53,7 @@ public class ParkingSpotService {
     public ParkingSpotModel updateWhenExited(String id) {
         ParkingSpotModel parkingSpotModelToUpdate = findById(id);
         parkingSpotModelToUpdate.setExitDate(OffsetDateTime.now());
-        final double RATE = 3.5;
-        final int ENTRY_HOUR = parkingSpotModelToUpdate.getEntryDate().getHour();
-        final int EXIT_HOUR = parkingSpotModelToUpdate.getExitDate().getHour();
-        final int ENTRY_MINUTE = parkingSpotModelToUpdate.getEntryDate().getMinute();
-        final int EXIT_MINUTE = parkingSpotModelToUpdate.getExitDate().getMinute();
-        final int HOUR_SPENT = EXIT_HOUR - ENTRY_HOUR;
-        final double MINUTE_SPENT = (EXIT_MINUTE - ENTRY_MINUTE) / 60.0;
-        final double TIME_SPENT = HOUR_SPENT + MINUTE_SPENT;
-        parkingSpotModelToUpdate.setBill(TIME_SPENT * RATE);
+        parkingSpotModelToUpdate.setBill(ParkingSpotCheckOut.checkOut(parkingSpotModelToUpdate));
         return parkingSpotRepository.save(parkingSpotModelToUpdate);
     }
 }

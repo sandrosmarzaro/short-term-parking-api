@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ParkingSpotControllerIT {
+class ParkingSpotControllerIT extends AbstractContainerBase {
 
     @LocalServerPort
     private int port;

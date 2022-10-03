@@ -4,6 +4,8 @@ import one.digitalinnovation.shorttermparking.exceptions.ParkingSpotNotFoundExce
 import one.digitalinnovation.shorttermparking.models.ParkingSpotModel;
 import one.digitalinnovation.shorttermparking.repositories.ParkingSpotRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -22,15 +24,18 @@ public class ParkingSpotService {
         return UUID.randomUUID().toString().replace("-", "");
     }
 
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<ParkingSpotModel> findAll() {
         return parkingSpotRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public ParkingSpotModel findById(String id) {
         return parkingSpotRepository.findById(id)
                 .orElseThrow(() -> new ParkingSpotNotFoundException(id));
     }
 
+    @Transactional
     public ParkingSpotModel create(ParkingSpotModel parkingSpotModel) {
         String uuid = getUUID();
         parkingSpotModel.setId(uuid);
@@ -38,6 +43,7 @@ public class ParkingSpotService {
         return parkingSpotRepository.save(parkingSpotModel);
     }
 
+    @Transactional
     public ParkingSpotModel update(String id, ParkingSpotModel parkingSpotModel) {
         ParkingSpotModel parkingSpotModelToUpdate = findById(id);
         parkingSpotModelToUpdate.setLicense(parkingSpotModel.getLicense());
@@ -45,11 +51,13 @@ public class ParkingSpotService {
         return parkingSpotRepository.save(parkingSpotModelToUpdate);
     }
 
+    @Transactional
     public void delete(String id) {
         ParkingSpotModel parkingSpotModelToDelete = findById(id);
         parkingSpotRepository.delete(parkingSpotModelToDelete);
     }
 
+    @Transactional
     public ParkingSpotModel updateWhenExited(String id) {
         ParkingSpotModel parkingSpotModelToUpdate = findById(id);
         parkingSpotModelToUpdate.setExitDate(OffsetDateTime.now());

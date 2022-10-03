@@ -71,7 +71,7 @@ public class ParkingSpotController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{id}")
+    @PatchMapping("/{id}")
     @ApiOperation(value = "Update a parking spot when it is exited")
     public ResponseEntity<ParkingSpotResponse> updateWhenExited(@PathVariable String id) {
         ParkingSpotModel parkingSpotModelUpdated = parkingSpotService.updateWhenExited(id);

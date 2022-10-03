@@ -12,15 +12,17 @@ public class ParkingSpotCheckOut {
         final double DAILY_RATE = 20.0;
         final OffsetDateTime ENTRY_DATE = parkingSpotModelToUpdate.getEntryDate();
         final OffsetDateTime EXIT_DATE = parkingSpotModelToUpdate.getExitDate();
-        final int ENTRY_MINUTE = ENTRY_DATE.getMinute();
-        final int EXIT_MINUTE = EXIT_DATE.getMinute();
-        final double MINUTE_SPENT = EXIT_MINUTE - ENTRY_MINUTE;
-        if (MINUTE_SPENT <= ChronoUnit.HOURS.getDuration().toMinutes()) {
+        final long DAYS_SPENT = ChronoUnit.DAYS.between(ENTRY_DATE, EXIT_DATE);
+        final long HOURS_SPENT = ChronoUnit.HOURS.between(ENTRY_DATE, EXIT_DATE);
+
+        if (ChronoUnit.DAYS.between(ENTRY_DATE, EXIT_DATE) > 1) {
+            return DAILY_RATE * DAYS_SPENT;
+        }
+        else if (ChronoUnit.HOURS.between(ENTRY_DATE, EXIT_DATE) > 1) {
+            return (HOURLY_RATE * HOURS_SPENT) + ONE_HOUR_RATE;
+        }
+        else {
             return ONE_HOUR_RATE;
         }
-        if (MINUTE_SPENT <= ChronoUnit.DAYS.getDuration().toMinutes()) {
-            return ONE_HOUR_RATE + HOURLY_RATE * (MINUTE_SPENT / ChronoUnit.HOURS.getDuration().toMinutes());
-        }
-        return DAILY_RATE * (MINUTE_SPENT / ChronoUnit.DAYS.getDuration().toMinutes());
     }
 }

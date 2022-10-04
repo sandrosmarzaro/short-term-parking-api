@@ -1,6 +1,7 @@
 package one.digitalinnovation.shorttermparking.controllers;
 
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import one.digitalinnovation.shorttermparking.dto.ParkingSpotRequest;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ParkingSpotControllerIT extends AbstractContainerBase {
@@ -31,7 +31,7 @@ class ParkingSpotControllerIT extends AbstractContainerBase {
                 .when()
                 .get("/parking")
                 .then()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(ContentType.JSON)
                 .statusCode(HttpStatus.OK.value())
                 .extract().response().body().prettyPrint();
     }
@@ -50,11 +50,11 @@ class ParkingSpotControllerIT extends AbstractContainerBase {
                 .auth()
                 .basic("admin", "admin")
                 .header("Authorization", "Basic YWRtaW46YWRtaW4=")
+                .header("Content-type", "application/json")
                 .body(request)
                 .when()
                 .post("/parking")
                 .then()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .statusCode(HttpStatus.CREATED.value())
                 .body("license", Matchers.equalTo("ABC-123"))
                 .body("brand", Matchers.equalTo("Toyota"))

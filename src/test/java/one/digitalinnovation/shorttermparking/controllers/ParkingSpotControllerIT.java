@@ -2,13 +2,13 @@ package one.digitalinnovation.shorttermparking.controllers;
 
 import io.restassured.RestAssured;
 import one.digitalinnovation.shorttermparking.dto.ParkingSpotRequest;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.http.MediaType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ParkingSpotControllerIT extends AbstractContainerBase {
@@ -25,10 +25,13 @@ class ParkingSpotControllerIT extends AbstractContainerBase {
     void whenFindAllThenCheckResult() {
         RestAssured
                 .given()
+                .auth()
+                .basic("admin", "admin")
+                .header("Authorization", "Basic YWRtaW46YWRtaW4=")
                 .when()
                 .get("/parking")
                 .then()
-                .header("Content-Type", "application/json")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .statusCode(HttpStatus.OK.value())
                 .extract().response().body().prettyPrint();
     }
@@ -36,20 +39,28 @@ class ParkingSpotControllerIT extends AbstractContainerBase {
     @Test
     void whenCreateThenCheckIsCreated() {
         ParkingSpotRequest request = new ParkingSpotRequest();
-        request.setLicense("JKL-0987");
-        request.setBrand("Hyundai");
-        request.setModel("Elantra");
-        request.setColor("Red");
-        request.setState("RS");
+        request.setLicense("ABC-123");
+        request.setBrand("Toyota");
+        request.setModel("Corolla");
+        request.setColor("Black");
+        request.setState("SP");
 
         RestAssured
                 .given()
+                .auth()
+                .basic("admin", "admin")
+                .header("Authorization", "Basic YWRtaW46YWRtaW4=")
                 .body(request)
-                .header("Content-Type", "application/json")
                 .when()
                 .post("/parking")
                 .then()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .statusCode(HttpStatus.CREATED.value())
+                .body("license", Matchers.equalTo("ABC-123"))
+                .body("brand", Matchers.equalTo("Toyota"))
+                .body("model", Matchers.equalTo("Corolla"))
+                .body("color", Matchers.equalTo("Black"))
+                .body("state", Matchers.equalTo("SP"))
                 .extract().response().body().prettyPrint();
     }
 }
